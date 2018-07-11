@@ -37,11 +37,11 @@ class App extends Component {
       	"tasks": [],
       }
     )
-    window.onbeforeunload = () -> this.saveState()
+    window.onbeforeunload = () => this.saveState()
   }
 
   saveState(){
-  	localStorage.setItem("todolist", JSON.stringify())
+  	localStorage.setItem("todolist", JSON.stringify(this.state))
   }
 
   addTask(){
@@ -49,14 +49,12 @@ class App extends Component {
     this.setState((oldState) => ({
       tasks: [...oldState.tasks, {title: taskTitle, done: false}]
     }))
-    saveState()
   }
 
   removeTask(){
     this.setState((oldState) => ({
       tasks: oldState.tasks.slice(0,oldState.tasks.length-1)
     }))
-    saveState()
   }
 
   modifyTask(i){
@@ -64,7 +62,6 @@ class App extends Component {
   	this.setState((oldState) => ({
   		tasks: oldState.tasks.slice(0,i).concat({title: oldState.tasks[i].title, done: !oldState.tasks[i].done}, oldState.tasks.slice(i+1,oldState.tasks.length))
   	}))
-  	saveState()
   }
 
   deleteTask(i){
@@ -74,7 +71,6 @@ class App extends Component {
   			tasks: oldState.tasks.slice(0,i).concat(oldState.tasks.slice(i+1,oldState.tasks.length)),
   		}
   	})
-  	saveState()
   }
 
   modifyTitle(i){
@@ -82,14 +78,12 @@ class App extends Component {
   	this.setState((oldState) => ({
   		tasks: oldState.tasks.slice(0,i).concat({title: newTitle, done: oldState.tasks[i].done}, oldState.tasks.slice(i+1,oldState.tasks.length))
   	}))
-  	saveState()
   }
 
   new(){
   	this.setState((oldState) => ({
   		tasks: [],
   	}))
-  	saveState()
   }
 
   render() {
