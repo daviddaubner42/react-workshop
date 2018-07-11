@@ -1,6 +1,32 @@
 import React, { Component } from 'react';
 import './App.css';
 
+class RowDone extends Component {
+
+	render() {
+    return (
+  		<tr className="table-success">
+    		<td style={{textAlign: 'center'}}>{this.props.index+1}</td>
+        <td style={{textAlign: 'center'}}>{this.props.task.title}</td>
+      	<td onClick={() => this.props.click} style={{textAlign: 'center'}}>	<i class="material-icons">done</i> </td>
+  		</tr>	
+  	)
+  }
+}
+
+class RowTodo extends Component {
+
+	render() {
+    return (
+  		<tr className="table-danger">
+    		<td style={{textAlign: 'center'}}>{this.props.index+1}</td>
+        <td style={{textAlign: 'center'}}>{this.props.task.title}</td>
+      	<td onClick={() => this.props.click} style={{textAlign: 'center'}}>	<i class="material-icons">clear</i> </td>
+  		</tr>	
+  	)
+  }
+}
+
 class App extends Component {
 
   constructor(props) {
@@ -39,6 +65,22 @@ class App extends Component {
   	}))
   }
 
+  deleteTask(i){
+  	this.setState((oldState) => {
+  		return {
+  			...oldState,
+  			tasks: oldState.tasks.slice(0,i).concat(oldState.tasks.slice(i+1,oldState.tasks.length)),
+  		}
+  	})
+  }
+
+  modifyTitle(i){
+  	let newTitle = prompt("Enter new title")
+  	this.setState((oldState) => ({
+  		tasks: oldState.tasks.slice(0,i).concat({title: newTitle, done: oldState.tasks[i].done}, oldState.tasks.slice(i+1,oldState.tasks.length))
+  	}))
+  }
+
   new(){
   	this.setState((oldState) => ({
   		tasks: [],
@@ -49,27 +91,12 @@ class App extends Component {
     return (
       <main className="container">
 
-        <div className="jumbotron" style={{height: 200, padding: 30}}>
+        <div className="jumbotron" style={{height: 160, padding: 30}}>
             
             <h1 className="display-4" style={{textAlign: 'center'}}>ToDo List</h1>
             
-            <p class="lead" style={{textAlign: 'center'}}>Number of tasks: {this.state.tasks.length}</p>
+            <p class="lead" style={{textAlign: 'center'}}>Number off tasks: {this.state.tasks.length}</p>
             
-            <div class="btn-group" role="group" aria-label="Basic example" style={{width:'100%'}} >
-		          
-		          <button type="button" class="btn btn-success" style={{width: '33%'}} onClick={
-			          () => this.addTask()
-			        }>Add</button>
-
-			        <button type="button" class="btn btn-dark" style={{width: '34%'}} onClick={
-			        	() => this.new()
-			        }>New List</button>
-
-		          <button type="button" class="btn btn-danger" style={{width: '33%'}} onClick={
-			          () => this.removeTask()
-			        }>Remove</button>
-		        
-		        </div>
         </div>
 
         <p></p>
@@ -77,6 +104,7 @@ class App extends Component {
         <table className="table">
           <thead className="thead-dark">
             <tr>
+            	<th scope="col" style={{textAlign: 'center'}}>Delete?</th>
               <th scope="col" style={{textAlign: 'center'}}>#</th>
               <th scope="col" style={{textAlign: 'center'}}>Title</th>
               <th scope="col" style={{textAlign: 'center'}}>Done?</th>
@@ -88,29 +116,62 @@ class App extends Component {
             	<tbody>
             	{task.done ? (
             		<tr className="table-success">
-	            		<td style={{textAlign: 'center'}}>{i+1}</td>
-	                <td style={{textAlign: 'center'}}>{task.title}</td>
-	              	<button onClick={() => this.modifyTask(i)} ><td style={{textAlign: 'center'}}>	<i class="material-icons">done</i> </td></button>
-            		</tr>	
+            			<td style={{textAlign: 'center'}} ><button onClick={() => this.deleteTask(i)} type="button" className="btn btn-danger" > X </button></td>
+								 	<td style={{textAlign: 'center'}}> {i+1} </td>
+								 	<td onClick={() => this.modifyTitle(i)} style={{textAlign: 'center'}}>{task.title}</td>
+									<td onClick={() => this.modifyTask(i)} style={{textAlign: 'center'}}>	<i class="material-icons">done</i> </td>            		
+								</tr>	
           		) : (
-								<tr className="table-danger">
-	            		<td style={{textAlign: 'center', height: 15}}>{i+1}</td>
-	                <td style={{textAlign: 'center'}}>{task.title}</td>
-            			<button onClick={() => this.modifyTask(i)} ><td style={{textAlign: 'center'}}>	<i class="material-icons">clear</i> </td></button>
-            		</tr>	
+          			<tr className="table-danger">
+								 	<td style={{textAlign: 'center'}} ><button onClick={() => this.deleteTask(i)} type="button" className="btn btn-danger" > X </button></td>
+								 	<td style={{textAlign: 'center'}}> {i+1} </td>
+								 	<td onClick={() => this.modifyTitle(i)} style={{textAlign: 'center'}}>{task.title}</td>
+									<td onClick={() => this.modifyTask(i)} style={{textAlign: 'center'}}>	<i class="material-icons">clear</i> </td>            		
+								</tr>
           		)}
             	</tbody>
 
-            	//<button onClick={() => this.modifyTask(i)}><td style={{textAlign: 'center'}}>	<p style={{margin: 0}}>&#10005;</p> </td></button>
-            	//<button onClick={() => this.modifyTask(i)}><td style={{textAlign: 'center'}}>	<p style={{margin: 0}}>&#10004;</p> </td></button>
 
             ))}
 
         </table>
+
+        <div class="btn-group" role="group" aria-label="Basic example" style={{width:'100%'}} >
+          
+          <button type="button" class="btn btn-success" style={{width: '50%'}} onClick={
+	          () => this.addTask()
+	        }>Add</button>
+
+          <button type="button" class="btn btn-danger" style={{width: '50%'}} onClick={
+	          () => this.new()
+	        }>Delete All</button>
+        
+        </div>
 
       </main>
     );
   }
 }
 
+// <RowDone task={task} index={i} click={this.modifyTask(i)} />
+
 export default App;
+
+
+
+
+// <tr className="table-danger">
+//  <td style={{textAlign: 'center', height: 15}}>{i+1}</td>
+//  <td style={{textAlign: 'center'}}>{task.title}</td>
+// 	<td className="done" onClick={() => this.modifyTask(i)} style={{textAlign: 'center'}}>	<i class="material-icons">clear</i> </td>            		
+// </tr>	
+
+// <tr className="table-success">
+// 	<td style={{textAlign: 'center'}}>{i+1}</td>
+//  <td style={{textAlign: 'center'}}>{task.title}</td>
+//  <td className="done" onClick={() => this.modifyTask(i)} style={{textAlign: 'center'}}>	<i class="material-icons">done</i> </td>
+// </tr>	
+
+// <button type="button" class="btn btn-dark" style={{width: '34%'}} onClick={
+// 	() => this.new()
+// }>New List</button>
