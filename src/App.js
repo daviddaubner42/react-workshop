@@ -32,6 +32,19 @@ class App extends Component {
     }))
   }
 
+  modifyTask(i){
+  	// let i = prompt("Enter task index")-1
+  	this.setState((oldState) => ({
+  		tasks: oldState.tasks.slice(0,i).concat({title: oldState.tasks[i].title, done: !oldState.tasks[i].done}, oldState.tasks.slice(i+1,oldState.tasks.length))
+  	}))
+  }
+
+  new(){
+  	this.setState((oldState) => ({
+  		tasks: [],
+  	}))
+  }
+
   render() {
     return (
       <main className="container">
@@ -48,7 +61,9 @@ class App extends Component {
 			          () => this.addTask()
 			        }>Add</button>
 
-			        <button type="button" class="btn btn-dark" style={{width: '34%'}}>Modify</button>
+			        <button type="button" class="btn btn-dark" style={{width: '34%'}} onClick={
+			        	() => this.new()
+			        }>New List</button>
 
 		          <button type="button" class="btn btn-danger" style={{width: '33%'}} onClick={
 			          () => this.removeTask()
@@ -69,27 +84,26 @@ class App extends Component {
           </thead>
             
             {this.state.tasks.map((task, i) => (
+            	
             	<tbody>
             	{task.done ? (
             		<tr className="table-success">
 	            		<td style={{textAlign: 'center'}}>{i+1}</td>
 	                <td style={{textAlign: 'center'}}>{task.title}</td>
-	                <td style={{textAlign: 'center'}}>	<p>&#10004;</p> </td>
+	              	<button onClick={() => this.modifyTask(i)} ><td style={{textAlign: 'center'}}>	<i class="material-icons">done</i> </td></button>
             		</tr>	
           		) : (
 								<tr className="table-danger">
 	            		<td style={{textAlign: 'center', height: 15}}>{i+1}</td>
 	                <td style={{textAlign: 'center'}}>{task.title}</td>
-	                <td style={{textAlign: 'center'}}>	<p style={{margin: 0}}>&#10005;</p> </td>
+            			<button onClick={() => this.modifyTask(i)} ><td style={{textAlign: 'center'}}>	<i class="material-icons">clear</i> </td></button>
             		</tr>	
           		)}
             	</tbody>
 
-              // <tr>
-              //   <td style={{textAlign: 'center'}}>{i+1}</td>
-              //   <td style={{textAlign: 'center'}}>{task.title}</td>
-              //   <td style={{textAlign: 'center'}}>{task.done ? (<p>&#10004;</p>) : (<p>&#10005;</p>)}</td>
-              // </tr>
+            	//<button onClick={() => this.modifyTask(i)}><td style={{textAlign: 'center'}}>	<p style={{margin: 0}}>&#10005;</p> </td></button>
+            	//<button onClick={() => this.modifyTask(i)}><td style={{textAlign: 'center'}}>	<p style={{margin: 0}}>&#10004;</p> </td></button>
+
             ))}
 
         </table>
